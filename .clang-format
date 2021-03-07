@@ -1,0 +1,51 @@
+BasedOnStyle: LLVM
+Standard: c++20
+
+ColumnLimit: 0
+IndentWidth: 4
+UseTab: Never
+MaxEmptyLinesToKeep: 2
+
+BreakBeforeBinaryOperators: All
+BreakBeforeBraces: Custom
+
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: MultiLine
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+AlignAfterOpenBracket: DontAlign
+# AlignConsecutiveAssignments: true # If true, aligns consecutive assignments.
+# AlignConsecutiveBitFields: true   # If true, aligns consecutive bitfield members.
+AlignConsecutiveMacros: true      # If true, aligns consecutive C/C++ preprocessor macros.
+AlignEscapedNewlines: Right
+
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: Inline
+# AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: All
+# AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: true
+# AllowShortLoopsOnASingleLine: false
+
+SpaceBeforeParens: ControlStatements
+AlwaysBreakTemplateDeclarations: MultiLine
+PointerAlignment: Left
+AccessModifierOffset: -4 # same as IndentWidth
+
+SpacesBeforeTrailingComments: 2
+CommentPragmas: '[!\*]'
+
+SortIncludes: false
+SortUsingDeclarations: false
