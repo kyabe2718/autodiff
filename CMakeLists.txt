@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(autodiff)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_COMPILER g++-10)
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
@@ -16,11 +17,14 @@ if (SRC_FILES)
     message("LibType: static")
     add_library(autodiff STATIC ${SRC_FILES})
     target_include_directories(autodiff PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+    target_include_directories(autodiff PUBLIC ${EIGEN3_INCLUDE_DIR})
 else ()
     message("LibType: interface")
     add_library(autodiff INTERFACE)
     target_include_directories(autodiff INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
+    target_include_directories(autodiff INTERFACE ${EIGEN3_INCLUDE_DIR})
 endif ()
+
 
 
 file(GLOB TEST_FILES ${CMAKE_CURRENT_LIST_DIR}/test/*.cpp)

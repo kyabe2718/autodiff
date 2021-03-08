@@ -1,20 +1,26 @@
-#undef NDEBUG
-#include <cassert>
+#include <autodiff/et.hpp>
 
-#include <autodiff/var.hpp>
-
+#include <Eigen/Core>
 #include <iostream>
+
+using namespace AutoDiff::ET;
+
+constexpr auto f = [](auto x, auto y) {
+    return x + y + 1;
+};
 
 int main()
 {
-    using namespace AutoDiff;
+    {
+        ETVar<0> x;
+        ETVar<1> y;
 
-    Var<0> x;
-    Var<1> y;
+        std::cout << sizeof(hana::make_tuple(x, x)) << std::endl;
+        std::cout << sizeof(x) << std::endl;
+        std::cout << sizeof(x + x + x + x) << std::endl;
+        std::cout << sizeof(x + y) << std::endl;
 
-    constexpr auto r = 1 + x + y;
-
-    constexpr auto v = r.eval(hana::make_tuple(1, 2));
-
-    std::cout << r.eval(hana::make_tuple(1, 2)) << std::endl;
+        constexpr auto r = f(x, y);
+        r.apply(hana::make_tuple(1, 2));
+    }
 }
