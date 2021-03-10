@@ -26,39 +26,38 @@ auto hasADLTagImpl(...) -> std::false_type;
 template <class T>
 struct HasADLTag : decltype(hasADLTagImpl(std::declval<T*>()))
 {};
+
+template <class T, class... Params>
+constexpr static decltype(auto) eval(T&& v, const hana::tuple<Params...>& p)
+{
+    if constexpr (detail::HasADLTag<std::remove_cvref_t<T>>::value) {
+        return std::forward<T>(v).apply(p);
+    } else {
+        return v;
+    }
+}
 }  // namespace detail
 
 template <class, class = ADL::ADLTag>
 struct ETFunc;
 
 template <class F, class... Args>
-requires std::is_empty_v<F> struct ETFunc<F(Args...), ADL::ADLTag>
+requires std::is_empty_v<F> struct ETFunc<F(Args...)>
 {
     template <class... Args2>
     constexpr explicit ETFunc(Args2&&... args) requires(sizeof...(Args) == sizeof...(Args2))
         : args(vessel::make_tuple(std::forward<Args2>(args)...)) {}
 
-    constexpr explicit ETFunc() requires(std::is_empty_v<Args>&&...) = default;
+    constexpr explicit ETFunc() = default;
 
     template <class... Param>
     constexpr decltype(auto) apply(const hana::tuple<Param...>& p) const
     {
         return hana::unpack(hana::make_range(hana::size_c<0>, hana::size_c<sizeof...(Args)>),
-            hana::on(F{}, [this, &p](auto idx) { return eval(this->args.get(idx), p); }));
-        // return hana::unpack(args, hana::on(F{}, [&p](auto&& arg) { return eval(std::forward<decltype(arg)>(arg), p); }));
+            hana::on(F{}, [this, &p](auto idx) { return detail::eval(this->args.get(idx), p); }));
     }
 
 private:
-    template <class T, class... Params>
-    constexpr static decltype(auto) eval(T&& v, const hana::tuple<Params...>& p)
-    {
-        if constexpr (detail::HasADLTag<std::remove_cvref_t<T>>::value) {
-            return std::forward<T>(v).apply(p);
-        } else {
-            return v;
-        }
-    }
-
     [[no_unique_address]] vessel::tuple<Args...> args;
 };
 

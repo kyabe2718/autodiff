@@ -9,22 +9,18 @@ namespace detail
 template <std::size_t Id>
 struct ArgIdx;
 
+template <class T>
+concept is_empty_elm = (std::is_empty_v<T> && std::is_trivially_constructible_v<T> && std::is_trivially_copy_constructible_v<T> && std::is_trivially_destructible_v<T>);
+
 template <class ArgIdx, class T>
 struct tuple_elm;
 
-template <class T>
-concept is_empty_elm = std::is_empty_v<T>&& std::is_default_constructible_v<T>;
 
 template <std::size_t Idx, class T>
 requires is_empty_elm<T> struct tuple_elm<ArgIdx<Idx>, T>
 {
     constexpr tuple_elm() = default;
-
-    template <class T2>
-    constexpr explicit tuple_elm(T2&& v)
-    {
-        T(std::forward<T2>(v));
-    }
+    constexpr explicit tuple_elm(const T& v) {}
 };
 
 template <std::size_t Idx, class T>
